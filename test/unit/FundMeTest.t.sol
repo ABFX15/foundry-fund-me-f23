@@ -19,7 +19,7 @@ contract FundMeTest is Test {
         DeployFundMe deployFundMe = new DeployFundMe();
         fundMe = deployFundMe.run(); // Extract the FundMe contract from the tuple
         vm.deal(USER, STARTING_BALANCE);
-    }   
+    }
 
     function testMinimumTestDollarIsFive() public view {
         assertEq(fundMe.MINIMUM_USD(), 5e18);
@@ -60,7 +60,7 @@ contract FundMeTest is Test {
         fundMe.fund{value: SEND_VALUE}();
         _;
     }
-    
+
     function testOnlyOwnerCanWithdraw() public funded {
         vm.prank(USER);
         vm.expectRevert();
@@ -92,7 +92,7 @@ contract FundMeTest is Test {
     function testWithdrawFromMultipleFunders() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
-        for(uint160 i=startingFunderIndex; i < numberOfFunders; i++){
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
         }
@@ -100,18 +100,18 @@ contract FundMeTest is Test {
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
 
-        vm.startPrank(fundMe.getOwner());    
+        vm.startPrank(fundMe.getOwner());
         fundMe.withdraw();
         vm.stopPrank();
 
         assert(address(fundMe).balance == 0);
         assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
-    
-        function testWithdrawFromMultipleFundersCheaper() public funded {
+
+    function testWithdrawFromMultipleFundersCheaper() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
-        for(uint160 i=startingFunderIndex; i < numberOfFunders; i++){
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
         }
@@ -119,7 +119,7 @@ contract FundMeTest is Test {
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
 
-        vm.startPrank(fundMe.getOwner());    
+        vm.startPrank(fundMe.getOwner());
         fundMe.cheaperWithdraw();
         vm.stopPrank();
 
